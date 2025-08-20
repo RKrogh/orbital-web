@@ -1,0 +1,118 @@
+@import "tailwindcss";
+
+:root {
+  /* Synthwave Space Theme Color Palette */
+  /* Deep Space */
+  --space-deep: #4e2a5b;
+  --space-medium: #6e4e8d;
+  --space-dark: #1d1153;
+  
+  /* Nebula */
+  --nebula-light: #9b79b9;
+  --nebula-pink: #f3a0c0;
+  --nebula-bright: #ff6bca;
+  
+  /* Warm Tones */
+  --warm-cream: #fcdfd4;
+  --warm-orange: #ff9952;
+  --warm-coral: #ff7684;
+  
+  /* Energy Colors */
+  --energy-pink: #fc3d7a;
+  --energy-deep: #bc2854;
+  --energy-dark: #7b0632;
+  
+  /* Main theme variables */
+  --background: var(--space-dark);
+  --foreground: var(--warm-cream);
+  --primary: var(--nebula-bright);
+  --secondary: var(--energy-pink);
+  --accent: var(--warm-orange);
+}
+
+@theme inline {
+  /* Color system */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  
+  /* Space theme colors */
+  --color-space-deep: var(--space-deep);
+  --color-space-medium: var(--space-medium);
+  --color-space-dark: var(--space-dark);
+  
+  --color-nebula-light: var(--nebula-light);
+  --color-nebula-pink: var(--nebula-pink);
+  --color-nebula-bright: var(--nebula-bright);
+  
+  --color-warm-cream: var(--warm-cream);
+  --color-warm-orange: var(--warm-orange);
+  --color-warm-coral: var(--warm-coral);
+  
+  --color-energy-pink: var(--energy-pink);
+  --color-energy-deep: var(--energy-deep);
+  --color-energy-dark: var(--energy-dark);
+  
+  /* Font system */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
+}
+
+body {
+  background: linear-gradient(135deg, var(--space-dark) 0%, var(--space-deep) 50%, var(--space-medium) 100%);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Smooth transitions for theme changes */
+* {
+  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Custom gradient utilities */
+.bg-gradient-radial {
+  background: radial-gradient(circle, var(--tw-gradient-stops));
+}
+
+/* Animation keyframes for space effects */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33% { transform: translateY(-10px) rotate(1deg); }
+  66% { transform: translateY(5px) rotate(-1deg); }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes drift {
+  0% { transform: translateX(0px); }
+  100% { transform: translateX(20px); }
+}
+
+@keyframes nebula-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 0.8; }
+}
+
+/* Utility classes for animations */
+.animate-float {
+  animation: float 8s ease-in-out infinite;
+}
+
+.animate-twinkle {
+  animation: twinkle 4s ease-in-out infinite;
+}
+
+.animate-drift {
+  animation: drift 15s linear infinite;
+}
+
+.animate-nebula-pulse {
+  animation: nebula-pulse 8s ease-in-out infinite;
+}
