@@ -19,7 +19,6 @@ interface TranquilNebulaProps {
 export default function TranquilNebula({ rotation }: TranquilNebulaProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const starsRef = useRef<Star[]>([]);
-  const animationFrameRef = useRef<number | null>(null);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -167,28 +166,27 @@ export default function TranquilNebula({ rotation }: TranquilNebulaProps) {
       }
     };
 
-    const animate = (time: number) => {
+    const drawStatic = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
 
-      // Apply rotation transform
+      // Apply rotation transform (static)
       ctx.save();
       ctx.translate(centerX, centerY);
       ctx.rotate((rotation * Math.PI) / 180);
       ctx.translate(-centerX, -centerY);
 
-      // Draw the nebula
+      // Draw the nebula (static)
       drawNebula(centerX, centerY);
 
       ctx.restore();
 
-      // Draw stars (not rotated with nebula for subtle effect)
+      // Draw stars (completely static)
       starsRef.current.forEach((star) => {
-        // Gentle twinkling animation
-        const twinkleOffset = Math.sin(time * star.twinkleSpeed) * 0.3;
-        star.opacity = Math.max(0.1, Math.min(1, star.baseOpacity + twinkleOffset));
+        // Use base opacity - no animation
+        star.opacity = star.baseOpacity;
 
         // Draw soft glow around each star
         const glowSize = star.size * 3;
@@ -213,26 +211,23 @@ export default function TranquilNebula({ rotation }: TranquilNebulaProps) {
         ctx.fill();
         ctx.globalAlpha = 1;
       });
-
-      animationFrameRef.current = requestAnimationFrame(animate);
     };
 
     resizeCanvas();
     createStars();
-    animationFrameRef.current = requestAnimationFrame(animate);
+    drawStatic(); // Draw once, no animation
 
     const handleResize = () => {
       resizeCanvas();
       createStars();
+      drawStatic(); // Redraw after resize
     };
 
     window.addEventListener('resize', handleResize);
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
+      // No animation frames to cancel since we're static
     };
   }, [rotation, isMounted]);
 

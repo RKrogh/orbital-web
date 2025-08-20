@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import MainLayout from "@/components/layout/MainLayout";
-import Navigation from "@/components/layout/Navigation";
 
 export const metadata: Metadata = {
   title: "Orbital Web Portal",
@@ -22,7 +21,6 @@ export default function RootLayout({
     <html lang="en">
       <body className="antialiased">
         <MainLayout>
-          <Navigation />
           {children}
         </MainLayout>
       </body>

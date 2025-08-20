@@ -100,6 +100,42 @@ body {
   50% { opacity: 0.8; }
 }
 
+@keyframes radialMenuItemAppear {
+  0% { 
+    opacity: 0;
+    transform: scale(0.3) translate(0, 0);
+  }
+  100% { 
+    opacity: 1;
+    transform: scale(1) translate(var(--x), var(--y));
+  }
+}
+
+@keyframes andorFadeIn {
+  0% { 
+    opacity: 0;
+  }
+  100% { 
+    opacity: 1;
+  }
+}
+
+@keyframes issDawnGlow {
+  0% { 
+    box-shadow: none;
+  }
+  100% { 
+    box-shadow: 
+      inset 0 0 80px rgba(255, 153, 82, 0.5),
+      inset 0 0 60px rgba(255, 118, 132, 0.4),
+      inset 0 0 40px rgba(252, 223, 212, 0.3),
+      0 0 60px rgba(255, 153, 82, 0.4),
+      0 0 120px rgba(255, 118, 132, 0.3),
+      0 0 180px rgba(252, 223, 212, 0.2),
+      0 0 240px rgba(255, 153, 82, 0.1);
+  }
+}
+
 /* Utility classes for animations */
 .animate-float {
   animation: float 8s ease-in-out infinite;
@@ -115,4 +151,12 @@ body {
 
 .animate-nebula-pulse {
   animation: nebula-pulse 8s ease-in-out infinite;
+}
+
+.animate-andor-fade-in {
+  animation: andorFadeIn 4s ease-in forwards;
+}
+
+.animate-iss-dawn-glow {
+  animation: issDawnGlow 3s ease-out forwards;
 }
