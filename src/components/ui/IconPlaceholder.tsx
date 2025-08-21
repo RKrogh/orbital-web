@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { forwardRef } from 'react';
 import Image from 'next/image';
 
 interface IconPlaceholderProps {
@@ -7,24 +7,23 @@ interface IconPlaceholderProps {
   variant?: 'orbit' | 'star' | 'portal';
 }
 
-export default function IconPlaceholder({ 
+const IconPlaceholder = forwardRef<HTMLDivElement, IconPlaceholderProps>(({ 
   className = '', 
-  size = 'md' 
-}: IconPlaceholderProps) {
-  const [hasGlowed, setHasGlowed] = useState(false);
+  size = 'md'
+}, ref) => {
   const sizeClasses = {
     sm: 'w-6 h-6',
-    md: 'w-32 h-32', // Larger with more space for glow
+    md: 'w-32 h-32',
     lg: 'w-12 h-12'
   };
 
   return (
     <div 
+      ref={ref}
       id={`icon-placeholder-${size}`} 
       className={`${sizeClasses[size]} ${className} flex items-center justify-center ${
-        size === 'md' ? `relative rounded-full p-6 ${hasGlowed ? 'animate-iss-dawn-glow' : ''}` : ''
+        size === 'md' ? 'relative rounded-full p-6' : ''
       }`}
-      onMouseEnter={() => size === 'md' && setHasGlowed(true)}
     >
       <Image
         src="/orbital_icon.svg"
@@ -35,4 +34,8 @@ export default function IconPlaceholder({
       />
     </div>
   );
-}
+});
+
+IconPlaceholder.displayName = 'IconPlaceholder';
+
+export default IconPlaceholder;

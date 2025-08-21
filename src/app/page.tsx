@@ -1,20 +1,21 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Image from 'next/image';
 import IconPlaceholder from "@/components/ui/IconPlaceholder";
 import RadialMenu from "@/components/ui/RadialMenu";
 
 const menuItems = [
-  { href: '/', label: 'HOME', icon: '🏠' },
-  { href: '/about', label: 'ABOUT', icon: '📖' },
-  { href: '/services', label: 'SERVICES', icon: '⚙️' },
-  { href: '/contact', label: 'CONTACT', icon: '📧' },
+  { href: '/', label: 'EXPLORE', icon: '/explore_icon.svg' },
+  { href: '/about', label: 'ABOUT', icon: '/star_icon.svg' },
+  { href: '/services', label: 'ENGAGE', icon: '/parabola_icon.svg' },
+  { href: '/contact', label: 'ENLIST', icon: '/sunset_ships_icon.svg' },
 ];
 
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showTextLogo, setShowTextLogo] = useState(false);
+  const iconRef = useRef<HTMLDivElement>(null);
 
   return (
     <div id="home-container" className="min-h-screen flex items-center justify-center px-6">
@@ -23,10 +24,13 @@ export default function Home() {
           <button
             onClick={() => setIsMenuOpen(true)}
             onMouseEnter={() => setShowTextLogo(true)}
-            className="transition-transform duration-300 hover:scale-105 cursor-pointer"
+            className="transition-transform duration-700 ease-out hover:scale-105 cursor-pointer"
             aria-label="Open navigation menu"
           >
-            <IconPlaceholder className="inline-block w-48 h-48 mr-4" />
+            <IconPlaceholder 
+              ref={iconRef}
+              className="inline-block w-48 h-48"
+            />
           </button>
         </h1>
         
@@ -45,12 +49,6 @@ export default function Home() {
             priority
           />
         </div>
-        
-        {/* <div id="home-buttons" className="flex justify-center gap-6">
-          <button id="home-explore-btn" className="px-6 py-3 bg-gradient-to-r from-nebula-bright/20 to-energy-pink/20 border border-nebula-bright/30 rounded-lg font-mono text-sm tracking-wider text-warm-cream hover:bg-gradient-to-r hover:from-nebula-bright/30 hover:to-energy-pink/30 transition-all duration-300">
-            EXPLORE
-          </button>
-        </div> */}
       </div>
 
       {/* Radial navigation menu */}
@@ -58,7 +56,9 @@ export default function Home() {
         items={menuItems}
         isOpen={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}
-        hollowRadius={120}
+        hollowRadius={80}
+        iconElement={iconRef.current}
+        orientation="auto"
       />
     </div>
   );

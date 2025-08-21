@@ -136,6 +136,50 @@ body {
   }
 }
 
+@keyframes hyperspaceEnter {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+    box-shadow: 
+      0 0 0px rgba(255, 107, 202, 0.8),
+      0 0 0px rgba(252, 61, 122, 0.6),
+      0 0 0px rgba(255, 149, 82, 0.4);
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.9;
+    box-shadow: 
+      0 0 200px rgba(255, 107, 202, 0.6),
+      0 0 400px rgba(252, 61, 122, 0.4),
+      0 0 600px rgba(255, 149, 82, 0.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 
+      0 0 100px rgba(255, 107, 202, 0.4),
+      0 0 200px rgba(252, 61, 122, 0.3),
+      0 0 300px rgba(255, 149, 82, 0.1);
+  }
+}
+
+@keyframes hyperspaceBackdrop {
+  0% {
+    background: radial-gradient(circle at var(--center-x, 50%) var(--center-y, 50%), 
+      transparent 0%, 
+      transparent 0%, 
+      transparent 100%);
+  }
+  100% {
+    background: radial-gradient(circle at var(--center-x, 50%) var(--center-y, 50%), 
+      rgba(255, 107, 202, 0.2) 0%,
+      rgba(252, 61, 122, 0.15) 15%,
+      rgba(29, 17, 83, 0.3) 40%, 
+      rgba(78, 42, 91, 0.4) 70%, 
+      rgba(0, 0, 0, 0.8) 100%);
+  }
+}
+
 /* Utility classes for animations */
 .animate-float {
   animation: float 8s ease-in-out infinite;
@@ -159,4 +203,69 @@ body {
 
 .animate-iss-dawn-glow {
   animation: issDawnGlow 3s ease-out forwards;
+}
+
+.animate-hyperspace-enter {
+  animation: hyperspaceEnter 0.8s ease-out forwards;
+}
+
+.animate-hyperspace-backdrop {
+  animation: hyperspaceBackdrop 0.8s ease-out forwards;
+}
+
+@keyframes menuOpenGlowExpand {
+  0% {
+    box-shadow: 
+      inset 0 0 80px rgba(255, 153, 82, 0.5),
+      inset 0 0 60px rgba(255, 118, 132, 0.4),
+      inset 0 0 40px rgba(252, 223, 212, 0.3),
+      0 0 60px rgba(255, 153, 82, 0.4),
+      0 0 120px rgba(255, 118, 132, 0.3),
+      0 0 180px rgba(252, 223, 212, 0.2),
+      0 0 240px rgba(255, 153, 82, 0.1);
+  }
+  100% {
+    box-shadow: 
+      inset 0 0 120px rgba(255, 153, 82, 0.8),
+      inset 0 0 100px rgba(255, 118, 132, 0.6),
+      inset 0 0 80px rgba(252, 223, 212, 0.4),
+      0 0 300px rgba(255, 153, 82, 0.6),
+      0 0 500px rgba(255, 118, 132, 0.4),
+      0 0 800px rgba(252, 223, 212, 0.2),
+      0 0 1200px rgba(255, 153, 82, 0.1);
+    transform: scale(1.1);
+  }
+}
+
+@keyframes menuCloseGlowContract {
+  0% {
+    box-shadow: 
+      inset 0 0 120px rgba(255, 153, 82, 0.8),
+      inset 0 0 100px rgba(255, 118, 132, 0.6),
+      inset 0 0 80px rgba(252, 223, 212, 0.4),
+      0 0 300px rgba(255, 153, 82, 0.6),
+      0 0 500px rgba(255, 118, 132, 0.4),
+      0 0 800px rgba(252, 223, 212, 0.2),
+      0 0 1200px rgba(255, 153, 82, 0.1);
+    transform: scale(1.1);
+  }
+  100% {
+    box-shadow: 
+      inset 0 0 80px rgba(255, 153, 82, 0.5),
+      inset 0 0 60px rgba(255, 118, 132, 0.4),
+      inset 0 0 40px rgba(252, 223, 212, 0.3),
+      0 0 60px rgba(255, 153, 82, 0.4),
+      0 0 120px rgba(255, 118, 132, 0.3),
+      0 0 180px rgba(252, 223, 212, 0.2),
+      0 0 240px rgba(255, 153, 82, 0.1);
+    transform: scale(1);
+  }
+}
+
+.animate-menu-open-glow {
+  animation: menuOpenGlowExpand 0.3s ease-out forwards;
+}
+
+.animate-menu-close-glow {
+  animation: menuCloseGlowContract 0.3s ease-out forwards;
 }

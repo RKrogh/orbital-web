@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import Link from 'next/link';
+import RadialMenuButton from './RadialMenuButton';
 
 interface RadialMenuItem {
   href: string;
@@ -15,11 +15,14 @@ interface RadialMenuProps {
   onClose: () => void;
   centerX?: number;
   centerY?: number;
-  hollowRadius?: number; // Configurable hollow center radius
+  hollowRadius?: number;
+  iconElement?: HTMLElement | null;
+  orientation?: 'cardinal' | 'ordinal' | 'auto'; // N/E/S/W vs NE/SE/SW/NW vs smart positioning
 }
 
-export default function RadialMenu({ items, isOpen, onClose, centerX = 0, centerY = 0, hollowRadius = 80 }: RadialMenuProps) {
+export default function RadialMenu({ items, isOpen, onClose, hollowRadius = 80, iconElement, orientation = 'auto' }: RadialMenuProps) {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+  const [iconPosition, setIconPosition] = useState({ x: 0, y: 0 });
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -38,45 +41,85 @@ export default function RadialMenu({ items, isOpen, onClose, centerX = 0, center
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
       document.addEventListener('keydown', handleEscape);
+      
+      // Calculate icon position when menu opens
+      if (iconElement) {
+        const rect = iconElement.getBoundingClientRect();
+        // Get the actual center of the icon content, accounting for padding
+        const computedStyles = window.getComputedStyle(iconElement);
+        const paddingLeft = parseFloat(computedStyles.paddingLeft) || 0;
+        const paddingTop = parseFloat(computedStyles.paddingTop) || 0;
+        const contentWidth = rect.width - (paddingLeft * 2);
+        const contentHeight = rect.height - (paddingTop * 2);
+        
+        setIconPosition({
+          x: rect.left + paddingLeft + contentWidth / 2,
+          y: rect.top + paddingTop + contentHeight / 2
+        });
+      }
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('keydown', handleEscape);
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, iconElement]);
 
   if (!isOpen) return null;
 
-  // Calculate positions for menu items in a circle
-  const radius = hollowRadius + 60; // Distance from center, ensuring hollow space
-  const angleStep = (2 * Math.PI) / items.length;
+  const outerRadius = hollowRadius + 80;
+  const segmentAngle = (2 * Math.PI) / items.length;
+  
+  // Determine optimal orientation based on item count
+  const getOptimalOrientation = (itemCount: number, requestedOrientation: string) => {
+    if (requestedOrientation !== 'auto') {
+      return requestedOrientation;
+    }
+    switch (itemCount) {
+      case 2:
+        return 'vertical'; // top and bottom
+      case 3:
+        return 'triangle'; // top, bottom-left, bottom-right
+      default:
+        return itemCount % 2 === 0 ? 'cardinal' : 'ordinal';
+    }
+  };
+  
+  const actualOrientation = getOptimalOrientation(items.length, orientation);
   
   return (
-    <div 
-      id="radial-menu-overlay"
-      className="fixed inset-0 z-50 flex items-center justify-center"
-    >
-      {/* Background overlay */}
+    <>
+      {/* Invisible click-outside area */}
       <div 
-        id="radial-menu-backdrop"
-        className="absolute inset-0 bg-space-dark/30 backdrop-blur-sm"
+        className="fixed inset-0 z-40"
         onClick={onClose}
       />
       
-      {/* Radial menu container */}
       <div 
         id="radial-menu-container"
         ref={menuRef}
-        className="relative"
+        className="fixed z-50"
         style={{
-          transform: `translate(${centerX}px, ${centerY}px)`
+          left: `${iconPosition.x}px`,
+          top: `${iconPosition.y}px`,
+          transform: 'translate(-50%, -50%)',
+          overflow: 'visible'
         }}
       >
-        {/* Hollow center visualization */}
+        {/* Outer ring */}
         <div 
-          id="radial-menu-hollow"
-          className="absolute rounded-full border-2 border-nebula-bright/30"
+          className="absolute rounded-full border border-nebula-bright/40"
+          style={{
+            width: `${outerRadius * 2}px`,
+            height: `${outerRadius * 2}px`,
+            left: `${-outerRadius}px`,
+            top: `${-outerRadius}px`,
+          }}
+        />
+        
+        {/* Inner hollow ring - keeps icon visible */}
+        <div 
+          className="absolute rounded-full border border-energy-pink/30"
           style={{
             width: `${hollowRadius * 2}px`,
             height: `${hollowRadius * 2}px`,
@@ -84,67 +127,25 @@ export default function RadialMenu({ items, isOpen, onClose, centerX = 0, center
             top: `${-hollowRadius}px`,
           }}
         />
+
         
-        {/* Menu items */}
-        {items.map((item, index) => {
-          const angle = index * angleStep - Math.PI / 2; // Start from top
-          const x = Math.cos(angle) * radius;
-          const y = Math.sin(angle) * radius;
-          const isHovered = hoveredItem === item.href;
-          
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`
-                absolute w-16 h-16 -translate-x-8 -translate-y-8 rounded-full
-                flex items-center justify-center
-                backdrop-blur-md border transition-all duration-300
-                ${isHovered 
-                  ? 'bg-nebula-bright/30 border-nebula-bright/60 scale-110 shadow-lg shadow-nebula-bright/30' 
-                  : 'bg-space-deep/50 border-nebula-light/30 hover:bg-space-medium/60 hover:border-nebula-bright/40'
-                }
-              `}
-              style={{
-                transform: `translate(${x}px, ${y}px) ${isHovered ? 'scale(1.1)' : 'scale(1)'}`,
-                animation: isOpen ? `radialMenuItemAppear 0.3s ease-out ${index * 0.05}s both` : 'none'
-              }}
-              onMouseEnter={() => setHoveredItem(item.href)}
-              onMouseLeave={() => setHoveredItem(null)}
-              onClick={onClose}
-            >
-              {/* Menu item content */}
-              <div className="flex flex-col items-center justify-center text-center">
-                {item.icon && (
-                  <div className="text-lg mb-1">{item.icon}</div>
-                )}
-                <span className="text-xs font-mono tracking-wider text-warm-cream/90">
-                  {item.label}
-                </span>
-              </div>
-              
-              {/* Connecting line to hollow edge */}
-              <div 
-                className={`
-                  absolute w-px bg-gradient-to-r transition-all duration-300
-                  ${isHovered 
-                    ? 'from-nebula-bright/60 to-transparent' 
-                    : 'from-nebula-light/30 to-transparent'
-                  }
-                `}
-                style={{
-                  height: `${radius - hollowRadius - 32}px`,
-                  transform: `rotate(${angle + Math.PI/2}rad)`,
-                  transformOrigin: 'bottom center',
-                  bottom: '32px',
-                  left: '50%',
-                  marginLeft: '-0.5px'
-                }}
-              />
-            </Link>
-          );
-        })}
+        {/* Menu segments */}
+        {items.map((item, index) => (
+          <RadialMenuButton
+            key={item.href}
+            item={item}
+            index={index}
+            isHovered={hoveredItem === item.href}
+            onMouseEnter={() => setHoveredItem(item.href)}
+            onMouseLeave={() => setHoveredItem(null)}
+            onClose={onClose}
+            hollowRadius={hollowRadius}
+            outerRadius={outerRadius}
+            segmentAngle={segmentAngle}
+            orientation={actualOrientation}
+          />
+        ))}
       </div>
-    </div>
+    </>
   );
 }

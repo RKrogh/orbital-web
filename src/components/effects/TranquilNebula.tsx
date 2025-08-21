@@ -17,8 +17,10 @@ interface TranquilNebulaProps {
 }
 
 export default function TranquilNebula({ rotation }: TranquilNebulaProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const nebulaCanvasRef = useRef<HTMLCanvasElement>(null);
+  const starsCanvasRef = useRef<HTMLCanvasElement>(null);
   const starsRef = useRef<Star[]>([]);
+  const animationFrameRef = useRef<number | null>(null);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -28,15 +30,19 @@ export default function TranquilNebula({ rotation }: TranquilNebulaProps) {
   useEffect(() => {
     if (!isMounted) return;
     
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    const nebulaCanvas = nebulaCanvasRef.current;
+    const starsCanvas = starsCanvasRef.current;
+    if (!nebulaCanvas || !starsCanvas) return;
 
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    const nebulaCtx = nebulaCanvas.getContext('2d');
+    const starsCtx = starsCanvas.getContext('2d');
+    if (!nebulaCtx || !starsCtx) return;
 
     const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      nebulaCanvas.width = window.innerWidth;
+      nebulaCanvas.height = window.innerHeight;
+      starsCanvas.width = window.innerWidth;
+      starsCanvas.height = window.innerHeight;
     };
 
     const createStars = () => {
@@ -58,8 +64,8 @@ export default function TranquilNebula({ rotation }: TranquilNebulaProps) {
       for (let i = 0; i < 120; i++) {
         const baseOpacity = seededRandom(i * 1000) * 0.5 + 0.3;
         stars.push({
-          x: seededRandom(i * 100) * canvas.width,
-          y: seededRandom(i * 200) * canvas.height,
+          x: seededRandom(i * 100) * starsCanvas.width,
+          y: seededRandom(i * 200) * starsCanvas.height,
           size: seededRandom(i * 300) * 1.5 + 0.3,
           opacity: baseOpacity,
           baseOpacity,
@@ -72,8 +78,8 @@ export default function TranquilNebula({ rotation }: TranquilNebulaProps) {
       for (let i = 0; i < 15; i++) {
         const baseOpacity = seededRandom((i + 120) * 1000) * 0.3 + 0.4;
         stars.push({
-          x: seededRandom((i + 120) * 100) * canvas.width,
-          y: seededRandom((i + 120) * 200) * canvas.height,
+          x: seededRandom((i + 120) * 100) * starsCanvas.width,
+          y: seededRandom((i + 120) * 200) * starsCanvas.height,
           size: seededRandom((i + 120) * 300) * 2 + 1.5,
           opacity: baseOpacity,
           baseOpacity,
@@ -85,7 +91,7 @@ export default function TranquilNebula({ rotation }: TranquilNebulaProps) {
       starsRef.current = stars;
     };
 
-    const drawNebula = (centerX: number, centerY: number) => {
+    const drawNebula = (centerX: number, centerY: number, ctx: CanvasRenderingContext2D) => {
       // Create multiple overlapping nebula clouds for depth
       const nebulaLayers = [
         {
@@ -166,31 +172,34 @@ export default function TranquilNebula({ rotation }: TranquilNebulaProps) {
       }
     };
 
-    const drawStatic = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Draw static nebula once
+    const drawStaticNebula = () => {
+      const centerX = nebulaCanvas.width / 2;
+      const centerY = nebulaCanvas.height / 2;
 
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
+      nebulaCtx.save();
+      nebulaCtx.translate(centerX, centerY);
+      nebulaCtx.rotate((rotation * Math.PI) / 180);
+      nebulaCtx.translate(-centerX, -centerY);
 
-      // Apply rotation transform (static)
-      ctx.save();
-      ctx.translate(centerX, centerY);
-      ctx.rotate((rotation * Math.PI) / 180);
-      ctx.translate(-centerX, -centerY);
+      drawNebula(centerX, centerY, nebulaCtx);
 
-      // Draw the nebula (static)
-      drawNebula(centerX, centerY);
+      nebulaCtx.restore();
+    };
 
-      ctx.restore();
+    // Animate only the stars
+    const drawStarsWithTwinkling = (time: number) => {
+      starsCtx.clearRect(0, 0, starsCanvas.width, starsCanvas.height);
 
-      // Draw stars (completely static)
+      // Draw stars with very subtle twinkling
       starsRef.current.forEach((star) => {
-        // Use base opacity - no animation
-        star.opacity = star.baseOpacity;
+        // Very subtle twinkling - only some stars and very gentle
+        const twinkleOffset = Math.sin(time * star.twinkleSpeed) * 0.15; // Much more subtle
+        star.opacity = Math.max(0.2, Math.min(1, star.baseOpacity + twinkleOffset));
 
         // Draw soft glow around each star
         const glowSize = star.size * 3;
-        const glowGradient = ctx.createRadialGradient(
+        const glowGradient = starsCtx.createRadialGradient(
           star.x, star.y, 0,
           star.x, star.y, glowSize
         );
@@ -198,36 +207,42 @@ export default function TranquilNebula({ rotation }: TranquilNebulaProps) {
         glowGradient.addColorStop(0.5, `${star.color}${Math.floor(star.opacity * 0.2 * 255).toString(16).padStart(2, '0')}`);
         glowGradient.addColorStop(1, 'transparent');
 
-        ctx.fillStyle = glowGradient;
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, glowSize, 0, Math.PI * 2);
-        ctx.fill();
+        starsCtx.fillStyle = glowGradient;
+        starsCtx.beginPath();
+        starsCtx.arc(star.x, star.y, glowSize, 0, Math.PI * 2);
+        starsCtx.fill();
 
         // Draw the star core
-        ctx.globalAlpha = star.opacity;
-        ctx.fillStyle = star.color;
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.globalAlpha = 1;
+        starsCtx.globalAlpha = star.opacity;
+        starsCtx.fillStyle = star.color;
+        starsCtx.beginPath();
+        starsCtx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+        starsCtx.fill();
+        starsCtx.globalAlpha = 1;
       });
+      
+      // Continue the animation loop for subtle twinkling
+      animationFrameRef.current = requestAnimationFrame(drawStarsWithTwinkling);
     };
 
     resizeCanvas();
     createStars();
-    drawStatic(); // Draw once, no animation
+    drawStaticNebula(); // Draw nebula once
+    animationFrameRef.current = requestAnimationFrame(drawStarsWithTwinkling); // Start star twinkling animation
 
     const handleResize = () => {
       resizeCanvas();
       createStars();
-      drawStatic(); // Redraw after resize
+      drawStaticNebula(); // Redraw nebula after resize
     };
 
     window.addEventListener('resize', handleResize);
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      // No animation frames to cancel since we're static
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
     };
   }, [rotation, isMounted]);
 
@@ -243,13 +258,21 @@ export default function TranquilNebula({ rotation }: TranquilNebulaProps) {
 
   return (
     <div id="nebula-container" className="fixed inset-0 -z-20">
+      {/* Static nebula layer */}
       <canvas
         id="nebula-canvas"
-        ref={canvasRef}
-        className="w-full h-full"
+        ref={nebulaCanvasRef}
+        className="absolute inset-0 w-full h-full"
         style={{ 
           background: 'radial-gradient(ellipse at center, #1d1153 0%, #0a0a0a 70%, #000000 100%)' 
         }}
+      />
+      
+      {/* Animated stars layer */}
+      <canvas
+        id="stars-canvas"
+        ref={starsCanvasRef}
+        className="absolute inset-0 w-full h-full"
       />
       
       {/* Additional CSS gradient overlay for extra depth and tranquility */}
