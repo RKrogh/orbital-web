@@ -19,7 +19,13 @@ export default function Enlist() {
         </h1>
         
         <p id="contact-description" className="text-lg text-warm-cream/80 mb-12 leading-relaxed">
-          Establish communication across the digital cosmos
+          Join up now!
+
+          Are you a tech-savy engineer with a hunger for knowledge and a passion for solving complex problems?
+          Join the Orbital space program of likeminded individuals, where you can grow, learn, and contribute to the future of humankind.
+
+          Fairness, transparency, and democracy will guide us through the stars.
+          I'm doing my part! Are you?
         </p>
         
         <div id="contact-cards" className="space-y-6">
@@ -29,8 +35,8 @@ export default function Enlist() {
           </div>
           
           <div id="contact-phone-card" className="backdrop-blur-md bg-space-deep/20 border border-nebula-bright/20 rounded-lg p-6">
-            <p className="text-xs font-mono text-nebula-bright mb-2 tracking-wider">QUANTUM COMMUNICATOR</p>
-            <p className="text-sm text-warm-cream/80">+1 (555) ORBITAL</p>
+            <p className="text-xs font-mono text-nebula-bright mb-2 tracking-wider">WOULD YOU LIKE TO KNOW MORE?</p>
+            <p className="text-sm text-warm-cream/80">Read our democratic propaganda <a href='/enlist/propaganda' target='_blank'>here</a>.</p>
           </div>
           
           <div id="contact-location-card" className="backdrop-blur-md bg-space-deep/20 border border-energy-pink/20 rounded-lg p-6">
@@ -41,7 +47,7 @@ export default function Enlist() {
         
         <div id="contact-button-wrapper" className="mt-12">
           <button id="contact-send-btn" className="px-6 py-3 bg-gradient-to-r from-energy-pink/20 to-nebula-bright/20 border border-energy-pink/30 rounded-lg font-mono text-sm tracking-wider text-warm-cream hover:bg-gradient-to-r hover:from-energy-pink/30 hover:to-nebula-bright/30 transition-all duration-300">
-            SEND TRANSMISSION
+            TRANSMIT YOUR COORDINATES
           </button>
         </div>
       </div>
