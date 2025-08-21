@@ -1,9 +1,21 @@
-export default function Contact() {
+import Image from 'next/image';
+
+export default function Enlist() {
   return (
     <div id="contact-container" className="min-h-screen flex items-center justify-center px-6">
       <div id="contact-content" className="max-w-md text-center">
-        <h1 id="contact-title" className="text-4xl md:text-6xl font-bold mb-8 bg-gradient-to-r from-warm-orange via-energy-pink to-nebula-bright bg-clip-text text-transparent">
-          CONTACT
+        <div id="contact-icon" className="flex justify-center mb-6">
+          <Image
+            src="/sunset_ships_icon.svg"
+            alt="Contact Icon"
+            width={128}
+            height={128}
+            className="w-32 h-32"
+          />
+        </div>
+        
+        <h1 id="enlist-title" className="text-4xl md:text-6xl font-bold mb-8 bg-gradient-to-r from-warm-orange via-energy-pink to-nebula-bright bg-clip-text text-transparent">
+          ENLIST
         </h1>
         
         <p id="contact-description" className="text-lg text-warm-cream/80 mb-12 leading-relaxed">

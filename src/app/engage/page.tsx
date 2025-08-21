@@ -1,9 +1,21 @@
-export default function Services() {
+import Image from 'next/image';
+
+export default function Engage() {
   return (
     <div id="services-container" className="min-h-screen flex items-center justify-center px-6">
       <div id="services-content" className="max-w-4xl text-center">
-        <h1 id="services-title" className="text-4xl md:text-6xl font-bold mb-8 bg-gradient-to-r from-energy-pink via-warm-orange to-nebula-bright bg-clip-text text-transparent">
-          CAPABILITIES
+        <div id="services-icon" className="flex justify-center mb-6">
+          <Image
+            src="/parabola_icon.svg"
+            alt="Services Icon"
+            width={128}
+            height={128}
+            className="w-32 h-32"
+          />
+        </div>
+        
+        <h1 id="engage-title" className="text-4xl md:text-6xl font-bold mb-8 bg-gradient-to-r from-energy-pink via-warm-orange to-nebula-bright bg-clip-text text-transparent">
+          ENGAGE
         </h1>
         
         <p id="services-description" className="text-lg text-warm-cream/80 mb-12 leading-relaxed">

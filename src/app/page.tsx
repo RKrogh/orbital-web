@@ -6,10 +6,9 @@ import IconPlaceholder from "@/components/ui/IconPlaceholder";
 import RadialMenu from "@/components/ui/RadialMenu";
 
 const menuItems = [
-  { href: '/', label: 'EXPLORE', icon: '/explore_icon.svg' },
-  { href: '/about', label: 'ABOUT', icon: '/star_icon.svg' },
-  { href: '/services', label: 'ENGAGE', icon: '/parabola_icon.svg' },
-  { href: '/contact', label: 'ENLIST', icon: '/sunset_ships_icon.svg' },
+  { href: '/explore', label: 'EXPLORE', icon: '/explore_icon.svg' },
+  { href: '/engage', label: 'ENGAGE', icon: '/parabola_icon.svg' },
+  { href: '/enlist', label: 'ENLIST', icon: '/sunset_ships_icon.svg' },
 ];
 
 export default function Home() {

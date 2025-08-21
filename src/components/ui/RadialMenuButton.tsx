@@ -124,10 +124,10 @@ export default function RadialMenuButton({
         href={item.href}
         className="absolute flex items-center justify-center transition-all duration-300 overflow-hidden"
         style={{
-          left: `${textX - 30}px`,
-          top: `${textY - 25}px`,
-          width: '60px',
-          height: '50px',
+          left: `${textX - 40}px`,
+          top: `${textY - 35}px`,
+          width: '80px',
+          height: '80px',
           borderRadius: '8px'
         }}
         onMouseEnter={onMouseEnter}
@@ -143,8 +143,8 @@ export default function RadialMenuButton({
                 <Image
                   src={item.icon}
                   alt={`${item.label} icon`}
-                  width={28}
-                  height={28}
+                  width={50}
+                  height={50}
                   className={`transition-all duration-300 ${
                     isHovered ? 'brightness-125' : 'brightness-90'
                   }`}
