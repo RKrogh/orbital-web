@@ -1,20 +1,44 @@
+'use client';
+
+import { useState, useRef } from 'react';
 import Image from 'next/image';
+import RadialMenu from '@/components/ui/RadialMenu';
 
 export default function Enlist() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const iconRef = useRef<HTMLButtonElement>(null);
+
+  const menuItems = [
+    { href: '/', label: 'HOME', icon: '/orbital_icon.svg' },
+    { href: '/explore', label: 'EXPLORE', icon: '/explore_icon.svg' },
+    { href: '/engage', label: 'ENGAGE', icon: '/parabola_icon.svg' },
+  ];
+
   return (
     <div id="contact-container" className="min-h-screen flex items-center justify-center px-6">
       <div id="contact-content" className="max-w-md text-center">
         <div id="contact-icon" className="flex justify-center mb-6">
-          <Image
-            src="/sunset_ships_icon.svg"
-            alt="Contact Icon"
-            width={128}
-            height={128}
-            className="w-32 h-32"
-          />
+          <button
+            ref={iconRef}
+            onClick={() => setIsMenuOpen(true)}
+            className="transition-transform duration-300 hover:scale-105 cursor-pointer"
+            aria-label="Open navigation menu"
+          >
+            <Image
+              src="/sunset_ships_icon.svg"
+              alt="Contact Icon"
+              width={128}
+              height={128}
+              className="w-32 h-32"
+            />
+          </button>
         </div>
         
-        <h1 id="enlist-title" className="text-4xl md:text-6xl font-bold mb-8 bg-gradient-to-r from-warm-orange via-energy-pink to-nebula-bright bg-clip-text text-transparent">
+        <h1 id="enlist-title" className={`text-4xl md:text-6xl font-bold mb-8 transition-all duration-300 ${
+          isMenuOpen 
+            ? 'opacity-40 blur-sm bg-gradient-to-r from-warm-orange/60 via-energy-pink/60 to-nebula-bright/60 bg-clip-text text-transparent' 
+            : 'bg-gradient-to-r from-warm-orange via-energy-pink to-nebula-bright bg-clip-text text-transparent'
+        }`}>
           ENLIST
         </h1>
         
@@ -51,6 +75,16 @@ export default function Enlist() {
           </button>
         </div>
       </div>
+
+      {/* Half-circle radial navigation menu */}
+      <RadialMenu 
+        items={menuItems}
+        isOpen={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+        hollowRadius={80}
+        iconElement={iconRef.current}
+        halfCircle="right"
+      />
     </div>
   );
 }

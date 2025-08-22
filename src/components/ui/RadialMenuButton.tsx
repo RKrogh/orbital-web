@@ -18,6 +18,8 @@ interface RadialMenuButtonProps {
   outerRadius: number;
   segmentAngle: number;
   orientation: string; // N/E/S/W vs NE/SE/SW/NW vs smart positioning
+  halfCircle?: 'top' | 'bottom' | 'left' | 'right' | null; // 180-degree mode direction
+  totalItems: number; // Total number of items for centering calculation
 }
 
 export default function RadialMenuButton({
@@ -30,11 +32,44 @@ export default function RadialMenuButton({
   hollowRadius,
   outerRadius,
   segmentAngle,
-  orientation
+  orientation,
+  halfCircle,
+  totalItems
 }: RadialMenuButtonProps) {
   // Calculate angles based on orientation
   const calculateAngle = () => {
     switch (orientation) {
+      case 'halfCircle':
+        // For half-circle (180°) mode - distribute evenly across the specified half
+        if (!halfCircle) return index * segmentAngle - Math.PI / 2; // fallback
+        
+        // Calculate the starting angle based on direction - centered on screen edge
+        let centerAngle: number;
+        switch (halfCircle) {
+          case 'bottom':
+            centerAngle = Math.PI / 2; // Center at 90° (bottom)
+            break;
+          case 'top':
+            centerAngle = -Math.PI / 2; // Center at 270° (top)
+            break;
+          case 'left':
+            centerAngle = Math.PI; // Center at 180° (left)
+            break;
+          case 'right':
+            centerAngle = 0; // Center at 0° (right)
+            break;
+          default:
+            centerAngle = 0;
+        }
+        
+        // Calculate the starting angle for the first button
+        // Center the entire arc around the edge direction
+        const totalArc = segmentAngle * (totalItems - 1); // Total arc span
+        const startAngle = centerAngle - totalArc / 2;
+        
+        // Distribute buttons evenly across the arc
+        return startAngle + (index * segmentAngle);
+      
       case 'vertical':
         // For 2 items: top (270°) and bottom (90°)
         return index === 0 ? -Math.PI / 2 : Math.PI / 2;

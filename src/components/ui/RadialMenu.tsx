@@ -18,9 +18,10 @@ interface RadialMenuProps {
   hollowRadius?: number;
   iconElement?: HTMLElement | null;
   orientation?: 'cardinal' | 'ordinal' | 'auto'; // N/E/S/W vs NE/SE/SW/NW vs smart positioning
+  halfCircle?: 'top' | 'bottom' | 'left' | 'right' | null; // 180-degree mode direction
 }
 
-export default function RadialMenu({ items, isOpen, onClose, hollowRadius = 80, iconElement, orientation = 'auto' }: RadialMenuProps) {
+export default function RadialMenu({ items, isOpen, onClose, hollowRadius = 80, iconElement, orientation = 'auto', halfCircle = null }: RadialMenuProps) {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [iconPosition, setIconPosition] = useState({ x: 0, y: 0 });
   const menuRef = useRef<HTMLDivElement>(null);
@@ -68,10 +69,16 @@ export default function RadialMenu({ items, isOpen, onClose, hollowRadius = 80, 
   if (!isOpen) return null;
 
   const outerRadius = hollowRadius + 80;
-  const segmentAngle = (2 * Math.PI) / items.length;
+  // Calculate segment angle based on full circle (360°) or half circle (180°)
+  const totalAngle = halfCircle ? Math.PI : 2 * Math.PI;
+  const segmentAngle = totalAngle / items.length;
   
-  // Determine optimal orientation based on item count
-  const getOptimalOrientation = (itemCount: number, requestedOrientation: string) => {
+  // Determine optimal orientation based on item count and half-circle mode
+  const getOptimalOrientation = (itemCount: number, requestedOrientation: string, isHalfCircle: boolean) => {
+    if (isHalfCircle) {
+      return 'halfCircle'; // Special mode for 180-degree layout
+    }
+    
     if (requestedOrientation !== 'auto') {
       return requestedOrientation;
     }
@@ -85,7 +92,7 @@ export default function RadialMenu({ items, isOpen, onClose, hollowRadius = 80, 
     }
   };
   
-  const actualOrientation = getOptimalOrientation(items.length, orientation);
+  const actualOrientation = getOptimalOrientation(items.length, orientation, !!halfCircle);
   
   return (
     <>
@@ -143,6 +150,8 @@ export default function RadialMenu({ items, isOpen, onClose, hollowRadius = 80, 
             outerRadius={outerRadius}
             segmentAngle={segmentAngle}
             orientation={actualOrientation}
+            halfCircle={halfCircle}
+            totalItems={items.length}
           />
         ))}
       </div>

@@ -1,20 +1,44 @@
+'use client';
+
+import { useState, useRef } from 'react';
 import Image from 'next/image';
+import RadialMenu from '@/components/ui/RadialMenu';
 
 export default function Engage() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const iconRef = useRef<HTMLButtonElement>(null);
+
+  const menuItems = [
+    { href: '/', label: 'HOME', icon: '/orbital_icon.svg' },
+    { href: '/explore', label: 'EXPLORE', icon: '/explore_icon.svg' },
+    { href: '/enlist', label: 'ENLIST', icon: '/sunset_ships_icon.svg' },
+  ];
+
   return (
     <div id="services-container" className="min-h-screen flex items-center justify-center px-6">
       <div id="services-content" className="max-w-4xl text-center">
         <div id="services-icon" className="flex justify-center mb-6">
-          <Image
-            src="/parabola_icon.svg"
-            alt="Services Icon"
-            width={128}
-            height={128}
-            className="w-32 h-32"
-          />
+          <button
+            ref={iconRef}
+            onClick={() => setIsMenuOpen(true)}
+            className="transition-transform duration-300 hover:scale-105 cursor-pointer"
+            aria-label="Open navigation menu"
+          >
+            <Image
+              src="/parabola_icon.svg"
+              alt="Services Icon"
+              width={128}
+              height={128}
+              className="w-32 h-32"
+            />
+          </button>
         </div>
         
-        <h1 id="engage-title" className="text-4xl md:text-6xl font-bold mb-8 bg-gradient-to-r from-energy-pink via-warm-orange to-nebula-bright bg-clip-text text-transparent">
+        <h1 id="engage-title" className={`text-4xl md:text-6xl font-bold mb-8 transition-all duration-300 ${
+          isMenuOpen 
+            ? 'opacity-40 blur-sm bg-gradient-to-r from-energy-pink/60 via-warm-orange/60 to-nebula-bright/60 bg-clip-text text-transparent' 
+            : 'bg-gradient-to-r from-energy-pink via-warm-orange to-nebula-bright bg-clip-text text-transparent'
+        }`}>
           ENGAGE
         </h1>
         
@@ -56,6 +80,16 @@ export default function Engage() {
           REQUEST REINFORCEMENTS
         </button>
       </div>
+
+      {/* Half-circle radial navigation menu */}
+      <RadialMenu 
+        items={menuItems}
+        isOpen={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+        hollowRadius={80}
+        iconElement={iconRef.current}
+        halfCircle="top"
+      />
     </div>
   );
 }

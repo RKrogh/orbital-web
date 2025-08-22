@@ -74,3 +74,49 @@ All pages follow the pattern:
 - SVG placeholders are provided for logo and icon elements
 - Build process includes static generation for all routes
 - Use unique IDs for div-tags for easy reference
+
+## Recent Development Context (Session Summary)
+
+### Radial Menu Implementation Status
+**Current State**: Successfully implemented 180-degree half-circle radial menus on all sub-pages with conditional header fading.
+
+**Key Components**:
+- `RadialMenu.tsx`: Main radial menu component with half-circle mode support
+- `RadialMenuButton.tsx`: Individual button component with angle calculations for half-circle positioning
+- Updated routes: `/explore` (was `/about`), `/engage` (was `/services`), `/enlist` (was `/contact`)
+
+**Half-Circle Positioning**:
+- `/explore`: `halfCircle="bottom"` - menu appears below icon
+- `/engage`: `halfCircle="top"` - menu appears above icon  
+- `/enlist`: `halfCircle="right"` - menu appears to right of icon
+
+**Current Features**:
+✅ Dynamic button positioning based on count (2=vertical, 3=triangle, 4+=cardinal/ordinal)
+✅ 180-degree half-circle mode with proper centering (buttons align along screen edges without tilting)
+✅ SVG icon support with hover effects (50px size)
+✅ Conditional header fading: when radial menu opens, page headers fade to 40% opacity, blur with `blur-sm`, and use reduced gradient colors (all colors `/60`)
+✅ Smooth transitions with `transition-all duration-300`
+✅ All sub-pages have clickable icons that trigger radial menus
+
+**Latest Issue Resolved**: 
+User reported that bright gradient headers were "shining through" radial menu buttons, making them hard to see. We tried a complex multi-layered solution (backdrop overlay + stronger backgrounds + enhanced borders) but user found it "visually chaotic". 
+
+**Current Solution**: 
+Simple conditional header fading - when `isMenuOpen` is true, headers get:
+- `opacity-40` (fade to 40%)
+- `blur-sm` (subtle blur for depth)
+- Gradient colors reduced to `/60` opacity (less vibrant)
+- Smooth `transition-all duration-300` animation
+
+**User Feedback**: "I like this" - approved the clean header fading approach.
+
+**Technical Implementation**:
+- Each page uses `useState` for `isMenuOpen` and `useRef` for `iconRef`
+- Headers use conditional className with ternary operator for menu state
+- RadialMenu component passes `totalItems` prop to RadialMenuButton for proper centering
+- Half-circle angle calculations center buttons along screen edges using `centerAngle - totalArc / 2`
+
+**Next Session Considerations**:
+- Current implementation is working well
+- User may want to refine the header fading effect or explore other visual improvements
+- All radial menu functionality is complete and stable

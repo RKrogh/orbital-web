@@ -1,20 +1,43 @@
+'use client';
+
+import { useState, useRef } from 'react';
 import Image from 'next/image';
+import RadialMenu from '@/components/ui/RadialMenu';
 
 export default function About() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const iconRef = useRef<HTMLButtonElement>(null);
+
+  const menuItems = [
+    { href: '/', label: 'HOME', icon: '/orbital_icon.svg' },
+    { href: '/engage', label: 'ENGAGE', icon: '/parabola_icon.svg' },
+    { href: '/enlist', label: 'ENLIST', icon: '/sunset_ships_icon.svg' },
+  ];
   return (
     <div id="about-container" className="min-h-screen flex items-center justify-center px-6">
       <div id="about-content" className="max-w-2xl text-center">
         <div id="about-icon" className="flex justify-center mb-6">
-          <Image
-            src="/explore_icon.svg"
-            alt="Explore Icon"
-            width={128}
-            height={128}
-            className="w-32 h-32"
-          />
+          <button
+            ref={iconRef}
+            onClick={() => setIsMenuOpen(true)}
+            className="transition-transform duration-300 hover:scale-105 cursor-pointer"
+            aria-label="Open navigation menu"
+          >
+            <Image
+              src="/explore_icon.svg"
+              alt="Explore Icon"
+              width={128}
+              height={128}
+              className="w-32 h-32"
+            />
+          </button>
         </div>
         
-        <h1 id="about-title" className="text-4xl md:text-6xl font-bold mb-8 bg-gradient-to-r from-warm-orange via-nebula-bright to-energy-pink bg-clip-text text-transparent">
+        <h1 id="about-title" className={`text-4xl md:text-6xl font-bold mb-8 transition-all duration-300 ${
+          isMenuOpen 
+            ? 'opacity-40 blur-sm bg-gradient-to-r from-warm-orange/60 via-nebula-bright/60 to-energy-pink/60 bg-clip-text text-transparent' 
+            : 'bg-gradient-to-r from-warm-orange via-nebula-bright to-energy-pink bg-clip-text text-transparent'
+        }`}>
           EXPLORE
         </h1>
         
@@ -46,6 +69,16 @@ export default function About() {
 
         </div>
       </div>
+
+      {/* Half-circle radial navigation menu */}
+      <RadialMenu 
+        items={menuItems}
+        isOpen={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+        hollowRadius={80}
+        iconElement={iconRef.current}
+        halfCircle="bottom"
+      />
     </div>
   );
 }
