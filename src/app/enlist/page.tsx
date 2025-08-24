@@ -9,8 +9,8 @@ export default function Enlist() {
   const iconRef = useRef<HTMLButtonElement>(null);
 
   const menuItems = [
-    { href: '/', label: 'HOME', icon: '/orbital_icon.svg' },
     { href: '/explore', label: 'EXPLORE', icon: '/explore_icon.svg' },
+    { href: '/', label: 'HOME', icon: '/orbital_icon.svg' },
     { href: '/engage', label: 'ENGAGE', icon: '/parabola_icon.svg' },
   ];
 
@@ -83,7 +83,7 @@ export default function Enlist() {
         onClose={() => setIsMenuOpen(false)}
         hollowRadius={80}
         iconElement={iconRef.current}
-        halfCircle="right"
+        halfCircle="bottom"
       />
     </div>
   );

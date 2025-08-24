@@ -9,9 +9,9 @@ export default function About() {
   const iconRef = useRef<HTMLButtonElement>(null);
 
   const menuItems = [
+    { href: '/enlist', label: 'ENLIST', icon: '/sunset_ships_icon.svg' },
     { href: '/', label: 'HOME', icon: '/orbital_icon.svg' },
     { href: '/engage', label: 'ENGAGE', icon: '/parabola_icon.svg' },
-    { href: '/enlist', label: 'ENLIST', icon: '/sunset_ships_icon.svg' },
   ];
   return (
     <div id="about-container" className="min-h-screen flex items-center justify-center px-6">

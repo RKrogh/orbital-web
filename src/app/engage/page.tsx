@@ -9,8 +9,8 @@ export default function Engage() {
   const iconRef = useRef<HTMLButtonElement>(null);
 
   const menuItems = [
-    { href: '/', label: 'HOME', icon: '/orbital_icon.svg' },
     { href: '/explore', label: 'EXPLORE', icon: '/explore_icon.svg' },
+    { href: '/', label: 'HOME', icon: '/orbital_icon.svg' },
     { href: '/enlist', label: 'ENLIST', icon: '/sunset_ships_icon.svg' },
   ];
 
@@ -88,7 +88,7 @@ export default function Engage() {
         onClose={() => setIsMenuOpen(false)}
         hollowRadius={80}
         iconElement={iconRef.current}
-        halfCircle="top"
+        halfCircle="bottom"
       />
     </div>
   );
