@@ -43,7 +43,11 @@ export default function Engage() {
         </h1>
         
         <p id="services-description" className="text-lg text-warm-cream/80 mb-12 leading-relaxed">
-          Engage with us to ensure your digital journey becomes a success. Our consultants are ready to be dropped straight into your problems.
+          These are not the droids you are looking for...
+          <br />
+          <br />
+          These, however, are the engineers you you'll need for whatever you intend to do with the droids, or project, or enterprice etc.
+          Make contact now to engage with Orbital for your technical needs.
         </p>
         
         <div id="services-grid" className="grid md:grid-cols-3 gap-8 mb-12">
