@@ -6,7 +6,16 @@ import RadialMenu from '@/components/ui/RadialMenu';
 
 export default function Engage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [menuAnimationState, setMenuAnimationState] = useState<'closed' | 'opening' | 'open' | 'closing'>('closed');
   const iconRef = useRef<HTMLButtonElement>(null);
+  
+  // Fade headers when menu is visible or closing (only unfade when completely closed)
+  const shouldFadeHeader = menuAnimationState === 'open' || menuAnimationState === 'opening' || menuAnimationState === 'closing';
+  
+  // Handle animation state changes
+  const handleAnimationStateChange = (state: 'closed' | 'opening' | 'open' | 'closing') => {
+    setMenuAnimationState(state);
+  };
 
   const menuItems = [
     { href: '/explore', label: 'EXPLORE', icon: '/explore_icon.svg' },
@@ -35,7 +44,7 @@ export default function Engage() {
         </div>
         
         <h1 id="engage-title" className={`text-4xl md:text-6xl font-bold mb-8 transition-all duration-300 ${
-          isMenuOpen 
+          shouldFadeHeader 
             ? 'opacity-40 blur-sm bg-gradient-to-r from-energy-pink/60 via-warm-orange/60 to-nebula-bright/60 bg-clip-text text-transparent' 
             : 'bg-gradient-to-r from-energy-pink via-warm-orange to-nebula-bright bg-clip-text text-transparent'
         }`}>
@@ -46,7 +55,7 @@ export default function Engage() {
           These are not the droids you are looking for...
           <br />
           <br />
-          These, however, are the engineers you you'll need for whatever you intend to do with the droids, or project, or enterprice etc.
+          These, however, are the engineers you&apos;ll need for whatever you intend to do with the droids, or project, or enterprice etc.
           Make contact now to engage with Orbital for your technical needs.
         </p>
         
@@ -90,6 +99,7 @@ export default function Engage() {
         items={menuItems}
         isOpen={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}
+        onAnimationStateChange={handleAnimationStateChange}
         hollowRadius={80}
         iconElement={iconRef.current}
         halfCircle="bottom"

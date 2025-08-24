@@ -6,11 +6,20 @@ import RadialMenu from '@/components/ui/RadialMenu';
 
 export default function Enlist() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [menuAnimationState, setMenuAnimationState] = useState<'closed' | 'opening' | 'open' | 'closing'>('closed');
   const iconRef = useRef<HTMLButtonElement>(null);
+  
+  // Fade headers when menu is visible or closing (only unfade when completely closed)
+  const shouldFadeHeader = menuAnimationState === 'open' || menuAnimationState === 'opening' || menuAnimationState === 'closing';
+  
+  // Handle animation state changes
+  const handleAnimationStateChange = (state: 'closed' | 'opening' | 'open' | 'closing') => {
+    setMenuAnimationState(state);
+  };
 
   const menuItems = [
     { href: '/explore', label: 'EXPLORE', icon: '/explore_icon.svg' },
-    { href: '/', label: 'HOME', icon: '/orbital_icon.svg' },
+    { href: '/', label: 'HOME', icon: '/star_icon.svg' },
     { href: '/engage', label: 'ENGAGE', icon: '/parabola_icon.svg' },
   ];
 
@@ -35,7 +44,7 @@ export default function Enlist() {
         </div>
         
         <h1 id="enlist-title" className={`text-4xl md:text-6xl font-bold mb-8 transition-all duration-300 ${
-          isMenuOpen 
+          shouldFadeHeader 
             ? 'opacity-40 blur-sm bg-gradient-to-r from-warm-orange/60 via-energy-pink/60 to-nebula-bright/60 bg-clip-text text-transparent' 
             : 'bg-gradient-to-r from-warm-orange via-energy-pink to-nebula-bright bg-clip-text text-transparent'
         }`}>
@@ -49,7 +58,7 @@ export default function Enlist() {
           Join the Orbital space program of likeminded individuals, where you can grow, learn, and contribute to the future of humankind.
 
           Fairness, transparency, and democracy will guide us through the stars.
-          I'm doing my part! Are you?
+          I&apos;m doing my part! Are you?
         </p>
         
         <div id="contact-cards" className="space-y-6">
@@ -61,11 +70,6 @@ export default function Enlist() {
           <div id="contact-phone-card" className="backdrop-blur-md bg-space-deep/20 border border-nebula-bright/20 rounded-lg p-6">
             <p className="text-xs font-mono text-nebula-bright mb-2 tracking-wider">WOULD YOU LIKE TO KNOW MORE?</p>
             <p className="text-sm text-warm-cream/80">Read our democratic propaganda <a href='/enlist/propaganda' target='_blank'>here</a>.</p>
-          </div>
-          
-          <div id="contact-location-card" className="backdrop-blur-md bg-space-deep/20 border border-energy-pink/20 rounded-lg p-6">
-            <p className="text-xs font-mono text-energy-pink mb-2 tracking-wider">SECTOR COORDINATES</p>
-            <p className="text-sm text-warm-cream/80">Andromeda Station<br />Grid: 42.1337.∞</p>
           </div>
         </div>
         
@@ -81,6 +85,7 @@ export default function Enlist() {
         items={menuItems}
         isOpen={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}
+        onAnimationStateChange={handleAnimationStateChange}
         hollowRadius={80}
         iconElement={iconRef.current}
         halfCircle="bottom"

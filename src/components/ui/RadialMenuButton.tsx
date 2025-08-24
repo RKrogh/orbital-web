@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -20,6 +21,8 @@ interface RadialMenuButtonProps {
   orientation: string; // N/E/S/W vs NE/SE/SW/NW vs smart positioning
   halfCircle?: 'top' | 'bottom' | 'left' | 'right' | null; // 180-degree mode direction
   totalItems: number; // Total number of items for centering calculation
+  animationState: 'closed' | 'opening' | 'open' | 'closing';
+  clockwiseIndex: number; // Position in clockwise order for staggered animations
 }
 
 export default function RadialMenuButton({
@@ -34,7 +37,9 @@ export default function RadialMenuButton({
   segmentAngle,
   orientation,
   halfCircle,
-  totalItems
+  totalItems,
+  animationState,
+  clockwiseIndex
 }: RadialMenuButtonProps) {
   // Calculate angles based on orientation
   const calculateAngle = () => {
@@ -125,9 +130,76 @@ export default function RadialMenuButton({
       Z
     `;
   };
+
+  const buttonRef = useRef<HTMLDivElement>(null);
   
+  // Handle animation with proper state transitions
+  useEffect(() => {
+    if (!buttonRef.current) return;
+    
+    const baseDelay = 20;
+    const staggerDelay = 50;
+    
+    // Calculate offset direction (toward center for initial/closing states)
+    const offsetDistance = 30;
+    const offsetX = Math.cos(midAngle) * offsetDistance;
+    const offsetY = Math.sin(midAngle) * offsetDistance;
+    
+    const element = buttonRef.current;
+    
+    // Clear any existing transitions
+    element.style.transition = 'none';
+    
+    switch (animationState) {
+      case 'opening':
+        // Start from hidden state
+        element.style.transform = `translate(${-offsetX}px, ${-offsetY}px) scale(0.3)`;
+        element.style.opacity = '0';
+        element.style.pointerEvents = 'none';
+        
+        // Force reflow to ensure initial state is applied
+        element.offsetHeight;
+        
+        // Add transition and animate to visible state
+        element.style.transition = `all 250ms cubic-bezier(0.34, 1.56, 0.64, 1) ${baseDelay + (clockwiseIndex * staggerDelay)}ms`;
+        element.style.transform = 'translate(0, 0) scale(1)';
+        element.style.opacity = '1';
+        element.style.pointerEvents = 'auto';
+        break;
+        
+      case 'open':
+        // Ensure fully visible
+        element.style.transition = 'all 300ms ease-out';
+        element.style.transform = 'translate(0, 0) scale(1)';
+        element.style.opacity = '1';
+        element.style.pointerEvents = 'auto';
+        break;
+        
+      case 'closing':
+        const reverseIndex = totalItems - 1 - clockwiseIndex;
+        element.style.transition = `all 300ms cubic-bezier(0.64, 0, 0.78, 0) ${baseDelay + (reverseIndex * 60)}ms`;
+        element.style.transform = `translate(${-offsetX * 1.3}px, ${-offsetY * 1.3}px) scale(0.2)`;
+        element.style.opacity = '0';
+        element.style.pointerEvents = 'none';
+        break;
+        
+      default:
+        // Hidden state
+        element.style.transition = 'none';
+        element.style.transform = `translate(${-offsetX}px, ${-offsetY}px) scale(0)`;
+        element.style.opacity = '0';
+        element.style.pointerEvents = 'none';
+    }
+  }, [animationState, clockwiseIndex, totalItems, midAngle]);
+
   return (
-    <div className="absolute inset-0" style={{ overflow: 'visible' }}>
+    <div 
+      ref={buttonRef}
+      className="absolute inset-0"
+      style={{ 
+        overflow: 'visible'
+      }}
+    >
       {/* SVG segment */}
       <svg
         className="absolute inset-0 w-full h-full pointer-events-none"
@@ -203,7 +275,7 @@ export default function RadialMenuButton({
           left: `${Math.cos(startAngle) * hollowRadius}px`,
           top: `${Math.sin(startAngle) * hollowRadius}px`,
           transform: `rotate(${startAngle + Math.PI/2}rad)`,
-          transformOrigin: '0px 0px',
+          transformOrigin: '0px 0px'
         }}
       />
     </div>

@@ -6,7 +6,16 @@ import RadialMenu from '@/components/ui/RadialMenu';
 
 export default function About() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [menuAnimationState, setMenuAnimationState] = useState<'closed' | 'opening' | 'open' | 'closing'>('closed');
   const iconRef = useRef<HTMLButtonElement>(null);
+  
+  // Fade headers when menu is visible or closing (only unfade when completely closed)
+  const shouldFadeHeader = menuAnimationState === 'open' || menuAnimationState === 'opening' || menuAnimationState === 'closing';
+  
+  // Handle animation state changes
+  const handleAnimationStateChange = (state: 'closed' | 'opening' | 'open' | 'closing') => {
+    setMenuAnimationState(state);
+  };
 
   const menuItems = [
     { href: '/enlist', label: 'ENLIST', icon: '/sunset_ships_icon.svg' },
@@ -34,7 +43,7 @@ export default function About() {
         </div>
         
         <h1 id="about-title" className={`text-4xl md:text-6xl font-bold mb-8 transition-all duration-300 ${
-          isMenuOpen 
+          shouldFadeHeader 
             ? 'opacity-40 blur-sm bg-gradient-to-r from-warm-orange/60 via-nebula-bright/60 to-energy-pink/60 bg-clip-text text-transparent' 
             : 'bg-gradient-to-r from-warm-orange via-nebula-bright to-energy-pink bg-clip-text text-transparent'
         }`}>
@@ -75,6 +84,7 @@ export default function About() {
         items={menuItems}
         isOpen={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}
+        onAnimationStateChange={handleAnimationStateChange}
         hollowRadius={80}
         iconElement={iconRef.current}
         halfCircle="bottom"
