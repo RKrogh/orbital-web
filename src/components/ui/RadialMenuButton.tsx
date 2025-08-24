@@ -158,6 +158,7 @@ export default function RadialMenuButton({
         element.style.pointerEvents = 'none';
         
         // Force reflow to ensure initial state is applied
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         element.offsetHeight;
         
         // Add transition and animate to visible state

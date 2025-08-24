@@ -19,7 +19,7 @@ export default function Engage() {
 
   const menuItems = [
     { href: '/explore', label: 'EXPLORE', icon: '/explore_icon.svg' },
-    { href: '/', label: 'HOME', icon: '/orbital_icon.svg' },
+    { href: '/', label: 'HOME', icon: '/star_icon.svg' },
     { href: '/enlist', label: 'ENLIST', icon: '/sunset_ships_icon.svg' },
   ];
 

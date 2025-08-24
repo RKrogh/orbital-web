@@ -87,7 +87,7 @@ export default function RadialMenu({ items, isOpen, onClose, onAnimationStateCha
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('keydown', handleEscape);
     };
-  }, [isOpen, onClose, iconElement]);
+  }, [isOpen, onClose, iconElement, startClosingAnimation]);
 
   // Handle opening animation
   useEffect(() => {
