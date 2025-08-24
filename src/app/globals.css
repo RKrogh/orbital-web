@@ -269,3 +269,28 @@ body {
 .animate-menu-close-glow {
   animation: menuCloseGlowContract 0.3s ease-out forwards;
 }
+
+/* Space-themed link styles for accessibility and design consistency */
+.space-link {
+  @apply text-energy-pink hover:text-nebula-bright 
+         underline decoration-energy-pink/60 hover:decoration-nebula-bright 
+         underline-offset-2 transition-all duration-300 font-medium
+         focus:outline-none focus:ring-2 focus:ring-energy-pink/50 focus:rounded-sm;
+}
+
+/* Subtle link variant for less prominent links */
+.space-link-subtle {
+  @apply text-warm-orange/80 hover:text-energy-pink 
+         no-underline hover:underline decoration-energy-pink/60
+         underline-offset-2 transition-all duration-300
+         focus:outline-none focus:ring-2 focus:ring-warm-orange/50 focus:rounded-sm;
+}
+
+/* High contrast link for important actions */
+.space-link-primary {
+  @apply text-nebula-bright hover:text-energy-pink 
+         underline decoration-nebula-bright/80 hover:decoration-energy-pink
+         underline-offset-2 transition-all duration-300 font-semibold
+         focus:outline-none focus:ring-2 focus:ring-nebula-bright/50 focus:rounded-sm
+         hover:drop-shadow-sm;
+}

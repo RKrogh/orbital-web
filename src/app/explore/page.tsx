@@ -73,7 +73,7 @@ export default function About() {
 
           <div id="about-generate-card" className="backdrop-blur-md bg-space-deep/20 border border-nebula-bright/20 rounded-lg p-6">
             <p className="mb-4 font-mono text-nebula-bright tracking-wider">NETWORK</p>
-            <p>Orbital is part of <a href='https://www.generategroup.se/' target='_blank'>Generate group</a>.</p>
+            <p>Orbital is part of <a href='https://www.generategroup.se/' target='_blank' className="space-link-subtle">Generate group</a>.</p>
           </div>
 
         </div>

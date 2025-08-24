@@ -69,7 +69,7 @@ export default function Enlist() {
           
           <div id="contact-phone-card" className="backdrop-blur-md bg-space-deep/20 border border-nebula-bright/20 rounded-lg p-6">
             <p className="text-xs font-mono text-nebula-bright mb-2 tracking-wider">WOULD YOU LIKE TO KNOW MORE?</p>
-            <p className="text-sm text-warm-cream/80">Read our democratic propaganda <a href='/enlist/propaganda' target='_blank'>here</a>.</p>
+            <p className="text-sm text-warm-cream/80">Read our democratic propaganda <a href='/enlist/propaganda' target='_blank' className="space-link">here</a>.</p>
           </div>
         </div>
         
