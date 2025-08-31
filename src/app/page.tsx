@@ -35,8 +35,10 @@ export default function Home() {
         
         <div 
           id="home-subtitle" 
-          className={`mb-12 h-16 flex items-center justify-center ${
+          className={`mb-12 h-16 flex items-center justify-center transition-all duration-300 ${
             showTextLogo ? 'animate-andor-fade-in opacity-100' : 'opacity-0'
+          } ${
+            isMenuOpen ? 'opacity-40 blur-sm' : ''
           }`}
         >
           <Image
