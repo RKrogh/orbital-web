@@ -1,7 +1,7 @@
 'use client';
 
 import { ReactNode } from 'react';
-import TranquilNebula from '../effects/TranquilNebula';
+import EnhancedSpaceBackground from '../effects/EnhancedSpaceBackground';
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -10,8 +10,8 @@ interface MainLayoutProps {
 export default function MainLayout({ children }: MainLayoutProps) {
   return (
     <div id="main-layout-container" className="relative min-h-screen overflow-hidden">
-      {/* Static nebula background */}
-      <TranquilNebula rotation={0} />
+      {/* Enhanced parallax space background */}
+      <EnhancedSpaceBackground />
       
       {/* Main content area */}
       <main id="main-content" className="relative z-10">

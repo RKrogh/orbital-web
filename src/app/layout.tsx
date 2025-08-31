@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import MainLayout from "@/components/layout/MainLayout";
+import { CameraProvider } from "@/contexts/CameraContext";
 
 export const metadata: Metadata = {
   title: "Orbital Web Portal",
@@ -20,9 +21,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased" suppressHydrationWarning={true}>
-        <MainLayout>
-          {children}
-        </MainLayout>
+        <CameraProvider>
+          <MainLayout>
+            {children}
+          </MainLayout>
+        </CameraProvider>
       </body>
     </html>
   );

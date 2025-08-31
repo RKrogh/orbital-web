@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import RadialMenuButton from './RadialMenuButton';
+import { useCamera, ROUTE_POSITIONS } from '@/contexts/CameraContext';
 
 interface RadialMenuItem {
   href: string;
@@ -28,12 +29,18 @@ export default function RadialMenu({ items, isOpen, onClose, onAnimationStateCha
   const [animationState, setAnimationState] = useState<'closed' | 'opening' | 'open' | 'closing'>('closed');
   const menuRef = useRef<HTMLDivElement>(null);
   const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const { previewPosition, resetPreview, isInPreview } = useCamera();
 
   // Function to start closing animation
   const startClosingAnimation = useCallback(() => {
     if (animationState === 'open' || animationState === 'opening') {
       setAnimationState('closing');
       onAnimationStateChange?.('closing');
+      
+      // Reset camera preview when closing
+      if (isInPreview) {
+        resetPreview();
+      }
       
       // Clear any existing timeout
       if (closeTimeoutRef.current) {
@@ -47,7 +54,7 @@ export default function RadialMenu({ items, isOpen, onClose, onAnimationStateCha
         onClose(); // Notify parent that menu is closed
       }, 350 + (items.length * 60)); // Wait for longest animation
     }
-  }, [animationState, items.length, onClose, onAnimationStateChange]);
+  }, [animationState, items.length, onClose, onAnimationStateChange, isInPreview, resetPreview]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -301,8 +308,21 @@ export default function RadialMenu({ items, isOpen, onClose, onAnimationStateCha
               item={item}
               index={index}
               isHovered={hoveredItem === item.href}
-              onMouseEnter={() => setHoveredItem(item.href)}
-              onMouseLeave={() => setHoveredItem(null)}
+              onMouseEnter={() => {
+                setHoveredItem(item.href);
+                // Trigger camera preview for destination
+                const targetPosition = ROUTE_POSITIONS[item.href];
+                if (targetPosition && animationState === 'open') {
+                  previewPosition(targetPosition, 0.25); // 25% preview intensity
+                }
+              }}
+              onMouseLeave={() => {
+                setHoveredItem(null);
+                // Reset camera preview
+                if (animationState === 'open' && isInPreview) {
+                  resetPreview();
+                }
+              }}
               onClose={onClose}
               hollowRadius={hollowRadius}
               outerRadius={outerRadius}
